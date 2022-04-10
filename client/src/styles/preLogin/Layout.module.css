@@ -1,0 +1,75 @@
+.layout{
+    background-color: white;
+    width: 30%;
+    height:fit-content;
+    margin:auto;
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    padding:40px 0;
+}
+
+.layout .body{
+    width: 70%;
+}
+
+.layout .body h2{
+    font-size: 44px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.layout .body .form{
+    width:80%;
+    margin:70px auto;
+}
+
+.layout .body .status,.layout .body .msg{
+    margin:auto;
+    text-align:center;
+}
+
+.layout .body .msg{
+    color:red;
+    font-weight: bold;
+    font-size:14px;
+}
+
+.layout .body .control{
+    margin-top:40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.layout .body .control button{
+    background-color: #38A82C;
+    padding:10px 20px;
+    cursor: pointer;
+    color:white;
+    border:none;
+    position: relative;
+    font-size: 14px;
+    width: max-content;
+}
+
+.layout .body .control button.active{
+    background-color: #267901;
+}
+
+@media(max-width:768px){
+    .layout{
+        width:90%;
+    }
+}
+
+@media(min-width:767px) and (max-width:992px){
+    .layout{
+        width:50%;
+    }
+}

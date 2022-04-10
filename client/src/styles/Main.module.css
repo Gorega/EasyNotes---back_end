@@ -1,0 +1,38 @@
+.main{
+    margin-top:42px;
+}
+
+.main h2{
+    font-size:30px;
+    cursor: default;
+    font-weight:500;
+}
+
+.main .notes{
+    margin-top:50px;
+    display: grid;
+    grid-template-columns: repeat(3,220px);
+    grid-gap: 70px;
+    flex-wrap: wrap;
+}
+
+@media(max-width:768px){
+    .main{
+        margin-top:110px;
+        width: 100%;
+    }
+    .main h2{
+        display: none;
+    }
+    .main .notes{
+        grid-template-columns: repeat(1,87%);
+        grid-gap: 20px;
+    }
+}
+
+@media(min-width:769px) and (max-width:1200px){
+    .main .notes{
+        grid-template-columns: repeat(2,48%);
+        grid-gap: 20px;
+    }
+}

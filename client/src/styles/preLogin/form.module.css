@@ -1,0 +1,12 @@
+form .formControl{
+    width:100%;
+    height:40px;
+    margin-bottom:20px;
+}
+
+form .formControl input{
+    color:black;
+    width:100%;
+    height:100%;
+    padding-left:10px;
+}

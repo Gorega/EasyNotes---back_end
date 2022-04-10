@@ -1,0 +1,44 @@
+.dashboard{
+    display: inline-flex;
+}
+
+.dashboard .sideNav{
+    position: relative;
+    width:20%;
+    height:100%;
+    padding-right:40px;
+}
+
+.dashboard .sideNav::after{
+    position: absolute;
+    content:"";
+    top:0;
+    right:0;
+    width:1px;
+    height:100vh;
+    background-color: #d9d9d9;
+}
+
+.dashboard .body{
+    margin-left:50px;
+    width:100%;
+    height:100%;
+}
+
+@media(max-width:768px){
+    .dashboard{
+        display: block;
+    }
+    .dashboard .body{
+        width: 100%;
+        margin:0;
+    }
+    .dashboard .sideNav{
+        display: block;
+        width: auto;
+    }
+
+    .dashboard .sideNav::after{
+        display: none;
+    }
+}
