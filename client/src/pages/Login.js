@@ -20,7 +20,7 @@ export default function Login(){
         axios.post(`${server}/api/v1/login`,{username,email,password},{withCredentials:true})
         .then(res => {
             setLoading(false)
-            setSuccess({msg:"success",status:true});
+            setSuccess({status:true});
             localStorage.setItem("user","loggedin")
             window.location.replace("/dashboard");
         })
@@ -46,7 +46,7 @@ export default function Login(){
     return <Layout
             login={login}
             formStatus={loading}
-            formResult={{status:success.status || error.status,msg:success.msg || error.msg}}>
+            formResult={{status:error.status,msg:success.msg || error.msg}}>
                 
             <form>
                 <div className={styles.formControl}>

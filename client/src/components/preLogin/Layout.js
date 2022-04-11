@@ -2,7 +2,7 @@ import { useEffect,useState } from "react"
 import styles from "../../styles/preLogin/Layout.module.css"
 import {useLocation,Link} from "react-router-dom"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from '@fortawesome/free-solid-svg-icons'
+import { faSpinner,faTriangleExclamation } from '@fortawesome/free-solid-svg-icons'
 
 
 export default function Layout(props){
@@ -26,7 +26,7 @@ export default function Layout(props){
                 <FontAwesomeIcon className="fa-spin" icon={faSpinner} />
             </div>}
             {props.formResult.status === true && <div className={styles.msg}>
-                {props.formResult.msg}
+                <FontAwesomeIcon icon={faTriangleExclamation} /> {props.formResult.msg}
             </div>}
             <div className={styles.control}>
                 <Link to="/login"><button className={activeFrom === 0 && styles.active} onClick={props.login}>Login</button></Link>

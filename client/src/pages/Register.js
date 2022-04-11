@@ -24,7 +24,7 @@ export default function Register(){
         .then(res => {
             console.log(res)
             setLoading(false)
-            setSuccess({status:true,msg:"success"})
+            setSuccess({status:true})
             Navigate("/login")
         })
         .catch(err => {
@@ -49,7 +49,7 @@ export default function Register(){
     return <Layout 
             register={register}
             formStatus={loading}
-            formResult={{status:success.status || error.status,msg:success.msg || error.msg}}>
+            formResult={{status:error.status,msg:success.msg || error.msg}}>
 
             <form onSubmit={register}>
                 <div className={styles.formControl}>
