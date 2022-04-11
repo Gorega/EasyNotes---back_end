@@ -1,5 +1,7 @@
 .main{
-    margin-top:42px;
+    position: relative;
+    top:-22px;
+    padding:40px 0;
 }
 
 .main h2{
@@ -12,14 +14,19 @@
     margin-top:50px;
     display: grid;
     grid-template-columns: repeat(3,220px);
-    grid-gap: 70px;
+    grid-gap: 25px 70px;
     flex-wrap: wrap;
 }
 
 @media(max-width:768px){
     .main{
+        height:650px;
+        overflow-y: auto;
         margin-top:110px;
         width: 100%;
+    }
+    .main::-webkit-scrollbar{
+        background-color: transparent;
     }
     .main h2{
         display: none;
