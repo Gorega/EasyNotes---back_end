@@ -26,15 +26,15 @@
 @media(max-width:768px){
     .dashboard{
         display: block;
+        height:90vh;
+        overflow: hidden;
     }
     .dashboard .body{
-        width: 100%;
         margin:0;
     }
     .dashboard .sideNav{
         display: block;
-        width: auto;
-        position: relative;
+        width: 100%;
     }
 
     .dashboard .sideNav::after{

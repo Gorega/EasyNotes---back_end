@@ -1,5 +1,4 @@
 .main{
-    position: relative;
     top:-22px;
     padding:40px 0;
 }
@@ -20,27 +19,29 @@
 
 @media(max-width:768px){
     .main{
-        height:620px;
-        overflow-y: auto;
-        margin-top:110px;
+        margin-top:100px;
         width: 100%;
     }
     .main::-webkit-scrollbar{
         background-color: transparent;
+        width: 0;
     }
     .main h2{
         display: none;
     }
     .main .notes{
-        margin-top:0;
-        grid-template-columns: repeat(1,87%);
+        height:100vh;
+        padding-bottom:400px;
+        overflow-y:scroll;
         grid-gap: 20px;
+        grid-template-columns: repeat(1,87%);
+        margin-top: 0;
     }
 }
 
 @media(min-width:769px) and (max-width:1200px){
     .main .notes{
-        grid-template-columns: repeat(2,48%);
-        grid-gap: 20px;
+        grid-template-columns: repeat(2,45%);
+        grid-gap: 20px 70px;
     }
 }
