@@ -34,7 +34,7 @@ const AppProvider = (props)=>{
         fetchUserData,user,
         logginStatus,setLogginStats,
         searchValue,setSearchValue,
-        showSearch,setShowSearch
+        showSearch,setShowSearch,
     }}>
         {props.children}
     </AppContext.Provider>

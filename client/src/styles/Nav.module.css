@@ -1,5 +1,4 @@
 .nav{
-    height:100%;
     margin:12px auto;
     flex-direction: column;
     display: flex;
@@ -75,18 +74,21 @@
 @media(max-width:768px){
 
     .nav{
+        position: relative;
         display: block;
         width:100%;
+        top:-10px;
+        left:0;
     }
 
     .nav .logo{
         position: absolute;
-        top:-7px;
+        top:0;
+        left:50%;
+        transform: translateX(-50%);
         font-size:16px;
         text-align: center;
         justify-self: center;
-        left:50%;
-        transform: translateX(-50%);
     }
 
     .nav .logo::after{

@@ -1,8 +1,8 @@
 import styles from "../styles/Note.module.css";
 import { faCheck, faEdit,faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {server} from "../config";
 import axios from "axios"
+import {server} from "../config";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../AppContext";
 import AlertModal from "./AlertModal";
@@ -17,10 +17,9 @@ export default function Note({noteId,noteContent,noteDate,noteColor,existNote,ad
         setUpdateNoteStatus(false)
         axios.patch(`${server}/api/v1/notes/update/${noteId}`,{content:noteText},{withCredentials:true})
         .then(res => {
-            console.log(res)
             setEditStatus(false)
             setUpdateNoteStatus(true);
-            setNoteText(noteText);
+            setNoteText(noteContent);
         })
         .catch(err => console.log(err));
     }
@@ -32,7 +31,6 @@ export default function Note({noteId,noteContent,noteDate,noteColor,existNote,ad
             setUpdateNoteStatus(false)
             axios.delete(`${server}/api/v1/notes/delete/${noteId}`,{withCredentials:true})
             .then(res => {
-                console.log(res)
                 setShowAlertModal(false);
                 setUpdateNoteStatus(true);
                 setEditStatus(false);
@@ -44,11 +42,13 @@ export default function Note({noteId,noteContent,noteDate,noteColor,existNote,ad
     useEffect(()=>{
         window.addEventListener("keyup",(e)=>{
             if(e.key == "Escape"){
-                setNNote(false)
+                setNNote({status:false})
                 setEditStatus(false)
             }
         })
-    },[])
+        // update note content on edit after delete or create a new note
+        setNoteText(noteContent)
+    },[noteContent])
 
     return <div className={styles.note} style={{backgroundColor:noteColor}} noteId={noteId}>
         <div className={styles.text}>
@@ -59,8 +59,14 @@ export default function Note({noteId,noteContent,noteDate,noteColor,existNote,ad
         </div>
         <div className={styles.footer}>
             <h4>{noteDate && noteDate.substring(0,10)}</h4>
-            {existNote ? <div className={styles.control}>
-                {editStatus ? <FontAwesomeIcon onClick={patchNote} icon={faCheck} /> : <FontAwesomeIcon icon={faEdit} onClick={()=> setEditStatus(true)} />}
+            {existNote ? <div className={styles.control} onClick={()=>{
+                if(editStatus){
+                    patchNote();
+                }else{
+                    setEditStatus(true)
+                }
+            }}>
+                {editStatus ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faEdit} />}
             </div>
              :
             <div className={styles.control} onClick={addNote}><FontAwesomeIcon icon={faCheck} /></div>}

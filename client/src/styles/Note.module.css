@@ -7,16 +7,25 @@
     width:220px;
 }
 
-.note .text{
-    width:100%;
-    min-width:150px;
+.text{
+    width: 100%;
+    height:130px;
 }
 
-.note p{
+.text p{
     font-size:14px;
     font-weight: 400;
     line-height: 1.5;
+    height:130px;
+    width: 100%;
     cursor: default;
+    overflow-y: auto;
+    overflow-wrap:break-word;
+}
+
+.text p::-webkit-scrollbar,.note textarea::-webkit-scrollbar{
+    width: 0;
+    background-color: transparent;
 }
 
 .note textarea{

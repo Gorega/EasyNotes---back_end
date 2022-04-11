@@ -3,8 +3,7 @@
 }
 
 .dashboard .sideNav{
-    position: relative;
-    width:20%;
+    position: fixed;
     height:100%;
     padding-right:40px;
 }
@@ -20,8 +19,7 @@
 }
 
 .dashboard .body{
-    margin-left:50px;
-    width:100%;
+    margin-left:220px;
     height:100%;
 }
 
@@ -36,6 +34,7 @@
     .dashboard .sideNav{
         display: block;
         width: auto;
+        position: relative;
     }
 
     .dashboard .sideNav::after{
