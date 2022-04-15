@@ -13,6 +13,9 @@ async function login(req,res){
         if(!comparePassword){
             return res.status(404).json({msg:"Incorrect username or password"})
         }
+        if(!user.active){
+            return res.status(422).json({msg:"please verify you account"});
+        }
         const token = jwt.sign({userId:user._id,username:user.username,email:user.email},process.env.JWT_SECRET_CODE)
         res.cookie("token",token,{
             httpOnly:true,

@@ -30,9 +30,6 @@
         display: none;
     }
     .main .notes{
-        height:100vh;
-        padding-bottom:400px;
-        overflow-y:scroll;
         grid-gap: 20px;
         grid-template-columns: repeat(1,87%);
         margin-top: 0;

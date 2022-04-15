@@ -1,5 +1,9 @@
 const User = require("../models/user");
-const bcrypt = require("bcrypt")
+const Token = require("../models/token");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
+const mail = require("../controllers/mail");
 
 async function register(req,res){
     let {username,email,password,confirmPass} = req.body;
@@ -22,11 +26,39 @@ async function register(req,res){
         const hashPassword = await bcrypt.hash(password,10);
         password = hashPassword
         confirmPass = hashPassword
+        // register user
         const user = await User.create({username,email,password,confirmPass});
-        return res.status(201).json(user);
+        // create activation link
+        const randomLink = jwt.sign({username},process.env.JWT_SECRET_CODE);
+        let emailMessage = `<h1>EasyNotes</h1> 
+        <p>Verify your email address</p>
+        <hr/>
+        <p> Kindly use the link below in order to activate your account: </p>
+        <a href="http://localhost:3000/activate-account/${randomLink}">Link</a>
+        `
+        await new Token({
+            userId:user._id,
+            token:randomLink,
+            date:new Date().getTime()
+        }).save();
+        mail(email,emailMessage);
+        return res.status(201).json({msg:"Success"});
     }catch(err){
         return res.status(500).json("server error");
     }
 }
 
-module.exports = register;
+async function activateAccount(req,res){
+    const {token} = req.params;
+    try{
+        const user = await Token.findOne({token:token});
+        await User.findOneAndUpdate({_id:mongoose.Types.ObjectId(user.userId)},{active:true});
+        await Token.deleteMany({});
+        return res.status(200).json({msg:"active"});
+
+    }catch(err){
+        return res.status(500).json({msg:"server error"});
+    }
+}
+
+module.exports = {register,activateAccount};

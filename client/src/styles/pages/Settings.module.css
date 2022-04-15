@@ -1,0 +1,152 @@
+.main{
+    position: relative;
+    z-index: 15;
+    padding:0;
+    margin:0;
+    height:100%;
+    padding-bottom:50px;
+    overflow-X: hidden;
+}
+
+.main::before{
+    position: absolute;
+    content:"";
+    top:0;
+    left:0;
+    height:60%;
+    width:100%;
+    background-color: #F3F5F7;
+    z-index: 0;
+}
+
+.main .body{
+    position: relative;
+    margin:auto;
+    top:40px;
+    z-index: 15;
+}
+
+.main h2{
+    font-size:24px;
+    font-weight: 500;
+    position: relative;
+    left:13%;
+}
+
+.main p{
+    font-size:12px;
+    font-weight: 400;
+    position: relative;
+    top:-12px;
+    left:13%;
+}
+
+.holder{
+    margin-top:10px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    padding:25px;
+    display: inline-flex;
+    width: 70%;
+    position: relative;
+    z-index: 20;
+    background-color: white;
+    left:50%;
+    transform: translateX(-50%);
+}
+
+form{
+    width:60%;
+    margin:auto;
+}
+
+form .formControl{
+    margin-bottom:15px;
+    position: relative;
+}
+
+form .formControl label{
+    font-size:13px;
+    font-weight:500;
+}
+
+form .formControl input{
+    width:100%;
+    height:40px;
+    margin-top:7px;
+    border:1px solid #d9d9d9;
+    padding-left:5px;  
+}
+
+form .formControl input:focus{
+    outline-color: #232E4D;
+}
+
+form .formControl span{
+    position: absolute;
+    bottom:-20px;
+    right:0;
+    font-size:13px;
+    font-weight: 500;
+    cursor: pointer;
+    color:#232E4D
+}
+
+
+form button,.profileImage label,form h5{
+    padding:10px 20px;
+    cursor: pointer;
+    border:none;
+    color:white;
+    background-color: #232E4D;
+    font-size:13px;
+    font-weight: bold;
+    width:max-content;
+    margin-top:25px;
+}
+
+.holder form button{
+    width:120px;
+    padding:12px 0;
+}
+
+.holder .profileImage{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.holder .profileImage img{
+    width:160px;
+    height:160px;
+    display: block;
+    border-radius: 50%;
+    margin-bottom:25px;
+}
+.msg{
+    color:red;
+    text-align: center;
+    font-weight:bold;
+    font-size:14px;
+    margin-top:40px;
+}
+
+@media(max-width:768px){
+    .holder{
+        display: flex;
+        flex-direction: column;
+        margin-bottom:25px;
+    }
+
+    .holder form{
+        order:2;
+        width: 100%;
+    }
+
+    .holder .profileImage{
+        order:1;
+        width: 100%;
+        margin-bottom:50px;
+    }
+}

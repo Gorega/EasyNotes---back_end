@@ -25,6 +25,10 @@ const userSchema = new mongoose.Schema({
     image:{
         type:String,
         default:"https://icon-library.com/images/no-user-image-icon/no-user-image-icon-21.jpg"
+    },
+    active:{
+        type:Boolean,
+        default:false
     }
 },{timeseries:true})
 

@@ -15,7 +15,7 @@
 }
 
 .layout .body{
-    width: 70%;
+    width: 100%;
 }
 
 .layout .body h2{
@@ -48,10 +48,10 @@
 }
 
 .layout .body .control button{
-    background-color: #38A82C;
+    background-color: #F5F6FD;
     padding:10px 20px;
     cursor: pointer;
-    color:white;
+    color:black;
     border:none;
     position: relative;
     font-size: 14px;
@@ -59,7 +59,8 @@
 }
 
 .layout .body .control button.active{
-    background-color: #267901;
+    background-color: #232E4D;
+    color:white;
 }
 
 @media(max-width:768px){

@@ -24,8 +24,7 @@ export default function Register(){
         .then(res => {
             console.log(res)
             setLoading(false)
-            setSuccess({status:true})
-            Navigate("/login")
+            setSuccess({status:true,msg:"A message has been sent to your email address, please verify your account"})
         })
         .catch(err => {
             console.log(err)
@@ -62,8 +61,11 @@ export default function Register(){
                     <input type="password" placeholder="Password" value={password} onChange={(e)=> setPassword(e.target.value)} required />
                 </div>
                 <div className={styles.formControl}>
-                    <input type="password" placeholder="Verify Password" value={confirmPass} onChange={(e)=> setConfirmPass(e.target.value)} required />
+                    <input type="password" placeholder="Re-type password" value={confirmPass} onChange={(e)=> setConfirmPass(e.target.value)} required />
                 </div>
+                {success.status && <div className={styles.msg}>
+                    {success.status && success.msg}
+                </div>}
             </form>
     </Layout>
 }

@@ -2,6 +2,21 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding:5px 0;
+}
+
+.header .home{
+        font-size: 25px;
+        position: relative;
+        z-index: 10;
+        top: 5px;
+        font-weight: bold;
+        cursor: pointer;
+}
+
+.header .home a{
+    text-decoration: none;
+    color:black;
 }
 
 .header .search{
@@ -51,14 +66,15 @@
     opacity: 0;
     pointer-events: none;
     transition: .3s all ease-in-out;
-    z-index: 10;
+    z-index: 70;
     position: absolute;
     top:50px;
-    padding:10px 20px;
+    padding:10px 25px;
     right:-70px;
     width:max-content;
     background-color: white;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    width: max-content;
 }
 
 .header .userProfile .userMenu.active{
@@ -117,6 +133,7 @@
     font-size:12px;
     position: relative;
     top:-10px;
+    left:0;
 }
 
 .header .userProfile .userMenu ul li svg{
@@ -135,6 +152,13 @@
         border-bottom: 1px solid #d9d9d9;
         height:40px;
         width: 100%;
+    }
+
+    .header .home{
+        position: absolute;
+        right:15px;
+        font-size:20px;
+        top:15px;
     }
 
     .header .search input{
@@ -174,6 +198,7 @@
         height:100%;
         padding:0;
         margin:0;
+        z-index: 20;
     }
 
     .header .userProfile .userMenu ul li:first-of-type{

@@ -2,6 +2,7 @@ import styles from "../styles/preLogin/form.module.css";
 import Layout from "../components/preLogin/Layout";
 import {server} from "../config";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../AppContext";
 
@@ -13,6 +14,7 @@ export default function Login(){
     const [success,setSuccess] = useState({msg:"",status:false});
     const [error,setError] = useState({msg:"",status:false});
     const {logginStatus,setLogginStats} = useContext(AppContext);
+    const Navigate = useNavigate();
 
     const login = ()=>{
         setLoading(true)
@@ -57,6 +59,7 @@ export default function Login(){
                 <div className={styles.formControl}>
                     <input type="password" placeholder="Password" value={password} onChange={(e)=> setPassword(e.target.value)} />
                 </div>
+                <span className={styles.hint} onClick={()=> Navigate("/reset-pass")}>Forget password?</span>
             </form>
-    </Layout>
+        </Layout>
 }

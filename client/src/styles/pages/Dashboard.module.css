@@ -26,7 +26,6 @@
 @media(max-width:768px){
     .dashboard{
         display: block;
-        height:90vh;
         overflow: hidden;
     }
     .dashboard .body{
@@ -35,6 +34,7 @@
     .dashboard .sideNav{
         display: block;
         width: 100%;
+        position: relative;
     }
 
     .dashboard .sideNav::after{
