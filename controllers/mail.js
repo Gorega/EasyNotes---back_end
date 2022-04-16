@@ -3,18 +3,18 @@ const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 
 const myOAuth2Client = new OAuth2(
-  "96709645210-7ro39dhrk1mcafc60b85mpkk0om5m1u0.apps.googleusercontent.com",
-  "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",
+  process.env.MAIL_CLIENT_ID,
+  process.env.MAIL_CLIENT_SECRET,
   "https://developers.google.com/oauthplayground"
   )
 
 myOAuth2Client.setCredentials({
-  refresh_token:"1//04phiGLL2sXYNCgYIARAAGAQSNwF-L9Ir4WWlXfftxdaDcJC1jzDIzhNLBMkuq95nF_3h2eMSCua_uVfTrUbLEHQZvxxfVdXLwSM"
+  refresh_token:process.env.MAIL_REFRESH_TOKEN
   });
 
 const myAccessToken = myOAuth2Client.getAccessToken()
 
-const mail = (to,mailMessage) =>{
+const mail = (to,mailMessage,mainSubject) =>{
         if(!to){
           throw new Error('BROKEN')
         }
@@ -24,18 +24,18 @@ const mail = (to,mailMessage) =>{
         service: 'gmail',
         auth: {
               type: "OAuth2",
-              user: "waelabuawwad18@gmail.com", //your gmail account you used to set the project up in google cloud console"
-              clientId: "96709645210-7ro39dhrk1mcafc60b85mpkk0om5m1u0.apps.googleusercontent.com",
-              clientSecret: "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",
-              refreshToken: "1//04phiGLL2sXYNCgYIARAAGAQSNwF-L9Ir4WWlXfftxdaDcJC1jzDIzhNLBMkuq95nF_3h2eMSCua_uVfTrUbLEHQZvxxfVdXLwSM",
-              accessToken: myAccessToken //access token variable we defined earlier
+              user: process.env.EMAIL_SERVICE,
+              clientId: process.env.MAIL_CLIENT_ID,
+              clientSecret: process.env.MAIL_CLIENT_SECRET,
+              refreshToken: process.env.MAIL_REFRESH_TOKEN,
+              accessToken: myAccessToken
         }
       });
 
       var mailOptions = {
-        from: "waelabuawwad18@gmail.com",
+        from: process.env.EMAIL_SERVICE,
         to: to,
-        subject: 'EasyNotes - Verify your email address',
+        subject: mainSubject,
         html: mailMessage
       };
 

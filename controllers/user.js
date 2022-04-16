@@ -73,8 +73,9 @@ async function sendEmail(req,res){
         <p> Here is the code required in order to verify your email address: </p>
         <p>${randomNumber()}</p>
         `
+    let emailSubject = "EasyNotes - verify your email address"
     try{ 
-        await mail(req.body.newEmail,emailMessage);
+        await mail(req.body.newEmail,emailMessage,emailSubject);
         return res.status(200).json({msg:"success"});
     }catch(err){
         return res.status(500).json({msg:"server error"})
@@ -121,9 +122,10 @@ async function sendResetPassMail(req,res){
         <p>Reset your account password</p>
         <hr/>
         <p> Kindly use the link below in order to reset your account password: </p>
-        <a href="http://localhost:3000/reset-pass-redirect/${randomLink}">Link</a>
+        <a href="https://easynotes-gorega.herokuapp.com/reset-pass-redirect/${randomLink}">Link</a>
         `
-        await mail(email,emailMessage);
+        let emailSubject = "EasyNotes - reset your account password"
+        await mail(email,emailMessage,emailSubject);
         await new Token({
             userId:user._id,
             token:randomLink,

@@ -34,14 +34,15 @@ async function register(req,res){
         <p>Verify your email address</p>
         <hr/>
         <p> Kindly use the link below in order to activate your account: </p>
-        <a href="http://localhost:3000/activate-account/${randomLink}">Link</a>
+        <a href="https://easynotes-gorega.herokuapp.com/activate-account/${randomLink}">Link</a>
         `
+        let emailSubject = "EasyNotes - activate your account"
         await new Token({
             userId:user._id,
             token:randomLink,
             date:new Date().getTime()
         }).save();
-        mail(email,emailMessage);
+        mail(email,emailMessage,emailSubject);
         return res.status(201).json({msg:"Success"});
     }catch(err){
         return res.status(500).json("server error");
