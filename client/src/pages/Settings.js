@@ -7,9 +7,11 @@ import axios from "axios";
 import { server } from "../config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTriangleExclamation,faSpinner } from "@fortawesome/free-solid-svg-icons";
+import useForm from "../components/lib/useForm";
 
 export default function Settings(){
-    const {user} = useContext(AppContext);
+    const {error,loading,setError,submitHandler} = useForm();
+    const {user,fetchUserData} = useContext(AppContext);
     const [passowrdModal,setPasswordModal] = useState(false);
     const [emailModal,setEmailModal] = useState(false);
     const [currentPass,setCurrentPass] = useState(null);
@@ -19,68 +21,84 @@ export default function Settings(){
     const [newUsername,setNewUsername] = useState(null);
     const [verificationCode,setVerificationCode] = useState(null);
     const [sendEmail,setSendEmail] = useState(false);
-    const [loading,setLoading] = useState(false);
-    const [error,setError] = useState({status:false,msg:""});
+    const [avatarPreview,setAvatarPreview] = useState(null);
+    const [avatarImage,setAvatarImage] = useState(null);
+    const [avatarStatus,setAvatarStatus] = useState(null);
 
     const pathUsername = (e)=>{
         e.preventDefault();
-        setLoading(true)
-        setError({status:false})
-        axios.patch(`${server}/api/v1/user/username-reset`,{newUsername:newUsername ? newUsername : user.username},{withCredentials:true})
-        .then(res => {
-            setLoading(false)
-            window.location.reload();
-        })
-        .catch(err => {
-            setLoading(false)
-            setError({status:true,msg:err.response.data.msg});
-        });
+        return submitHandler(axios.patch,
+            `${server}/api/v1/user/username-reset`,
+            {newUsername:newUsername ? newUsername : user.username},
+            "reload" )
     }
 
     const patchUserPass = (e)=>{
         e.preventDefault();
-        setLoading(true)
-        setError({status:false});
-        axios.patch(`${server}/api/v1/user/password-reset`,{currentPass,newPass,confirmNewPass},{withCredentials:true})
-        .then(res => window.location.reload())
-        .catch(err => {
-            setLoading(false);
-            setError({status:true,msg:err.response.data.msg})
-        });
+        return submitHandler(axios.patch,
+            `${server}/api/v1/user/password-reset`,
+            {currentPass,newPass,confirmNewPass},
+            "reload" )
     }
 
     const sendEmailHandler = ()=>{
-        setLoading(true)
-        setError({status:false});
+        setError({status:false})
         axios.post(`${server}/api/v1/user/email-send`,{newEmail},{withCredentials:true})
-        .then(res => {
-            setLoading(false)
-            setSendEmail(true)
-        })
-        .catch(err => {
-            setLoading(false)
-            setError({status:true,msg:err.response.data.msg});
-        });
+        .then(res => setSendEmail(true))
+        .catch(err=> setError({status:true,msg:err.response.data.msg}));
     }
 
     const patchUserEmail = (e)=>{
         e.preventDefault();
-        setError({status:false});
-        setLoading(true)
-        axios.patch(`${server}/api/v1/user/email-reset`,{newEmail,verificationCode,password:currentPass},{withCredentials:true})
+        return submitHandler(axios.patch,
+            `${server}/api/v1/user/email-reset`,
+            {newEmail,verificationCode,password:currentPass},
+            "reload")
+    }
+
+    const getAvatarPreview = (e)=>{
+        setAvatarStatus("pending")
+        const data = new FormData();
+        data.append("avatar",e.target.files[0])
+        axios.post(`${server}/api/v1/user/upload-avatar-preview`,data,{withCredentials:true})
         .then(res => {
-            setLoading(false);
-            window.location.reload();
+            console.log(res)
+            setAvatarStatus("fulfilled")
+            setAvatarPreview(res.data.preview)
+            setAvatarImage(e.target.files[0])
         })
-        .catch(err => {
-            setLoading(false);
-            setError({status:true,msg:err.response.data.msg})
-        });
+        .catch(err => setAvatarStatus("rejected"));
+    }
+
+    const uploadAvater = ()=>{
+        setAvatarStatus("pending")
+        const data = new FormData();
+        data.append("avatar",avatarImage)
+        axios.post(`${server}/api/v1/user/upload-avatar`,data,{withCredentials:true})
+        .then(res => {
+            setAvatarStatus("fulfilled")
+            setAvatarPreview(null);
+        })
+        .catch(err => setAvatarStatus("rejected"));
+    }
+
+    const deleteAvatar = ()=>{
+        setAvatarStatus("pending")
+        axios.delete(`${server}/api/v1/user/delete-avatar/${avatarPreview}`,{withCredentials:true})
+        .then(res => {
+            setAvatarStatus("fulfilled")
+            setAvatarPreview(null)
+        })
+        .catch(err => setAvatarStatus("rejected"));
     }
 
     useEffect(()=>{
         setError({status:false})
     },[emailModal,passowrdModal])
+
+    useEffect(()=>{
+        fetchUserData();
+    },[avatarStatus])
 
 return <>
 <div className={styles.main}>
@@ -109,10 +127,15 @@ return <>
                 <button type="submit">Save</button>
             </form>
             <div className={styles.profileImage}>
-                <img src={user.image} alt="" />
+                <div className={styles.avatar}>
+                    {avatarStatus === "pending" ? <FontAwesomeIcon icon={faSpinner} className="fa-spin" /> : <img src={`${server}/avaters/${avatarPreview ? avatarPreview : user.image}`} alt="" />}
+                </div>
                 <div className={styles.upload}>
-                    <input id="upload" type="file" style={{display:"none"}} />
-                    <label htmlFor="upload">Upload a picture</label>
+                    <input id="upload" type="file" style={{display:"none"}} onChange={getAvatarPreview}/>
+                    {avatarPreview ? <ul className={styles.patch}>
+                        <li onClick={uploadAvater}>Save</li>
+                        <li onClick={deleteAvatar}>Cancel</li>
+                    </ul> : <label htmlFor="upload">Upload a picture</label>}
                 </div>
             </div>
         </div>

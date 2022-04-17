@@ -5,32 +5,21 @@ import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../AppContext";
+import useForm from "../components/lib/useForm";
 
 export default function Login(){
+    const {error,success,loading,submitHandler} = useForm();
     const [username,setUsername] = useState(null);
     const [email,setEmail] = useState(null);
     const [password,setPassword] = useState(null);
-    const [loading,setLoading] = useState(false);
-    const [success,setSuccess] = useState({msg:"",status:false});
-    const [error,setError] = useState({msg:"",status:false});
     const {logginStatus,setLogginStats} = useContext(AppContext);
     const Navigate = useNavigate();
 
     const login = ()=>{
-        setLoading(true)
-        setError({status:false})
-        axios.post(`${server}/api/v1/login`,{username,email,password},{withCredentials:true})
-        .then(res => {
-            setLoading(false)
-            setSuccess({status:true});
-            localStorage.setItem("user","loggedin")
-            window.location.replace("/dashboard");
-        })
-        .catch(err => {
-            console.log(err)
-            setLoading(false)
-            setError({msg:err.response.data.msg,status:true})
-        });
+            return submitHandler(axios.post,
+            `${server}/api/v1/login`,
+            {username,email,password},
+            "setStorage" )
     }
 
     useEffect(()=>{

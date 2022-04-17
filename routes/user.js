@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../auth/auth");
-const {user,patchUsername,patchUserPass,sendEmail,patchUserEmail,sendResetPassMail,resetUserPass} = require("../controllers/user");
+const {user,patchUsername,patchUserPass,sendEmail,patchUserEmail,sendResetPassMail,resetUserPass,uploadAvatarPreview,uploadAvater,deleteAvater} = require("../controllers/user");
 const {activateAccount,register} = require("../controllers/register");
 const login = require("../controllers/login");
 const logout = require("../controllers/logout");
+const multer  = require('multer')
+const upload = multer({ dest: 'avaters/' })
 
 router.route("/user").get(auth,user);
 router.route("/user/username-reset").patch(auth,patchUsername);
@@ -17,5 +19,8 @@ router.route("/login").post(login);
 router.route("/logout").get(logout);
 router.route("/user/email-reset-pass").post(sendResetPassMail);
 router.route("/user/reset-pass/:token").patch(resetUserPass);
+router.route("/user/upload-avatar-preview").post(upload.single('avatar'),uploadAvatarPreview);
+router.route("/user/upload-avatar").post(auth,upload.single('avatar'),uploadAvater)
+router.route("/user/delete-avatar/:path").delete(auth,deleteAvater);
 
 module.exports = router;

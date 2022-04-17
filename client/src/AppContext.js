@@ -24,14 +24,13 @@ const AppProvider = (props)=>{
         if(localStorage.getItem("user")){
             fetchUserData();
         }
-
     },[])
 
     return <AppContext.Provider value={{
         nNote,
         setNNote,
         updateNoteStatus,setUpdateNoteStatus,
-        fetchUserData,user,
+        fetchUserData,user,setUser,
         logginStatus,setLogginStats,
         searchValue,setSearchValue,
         showSearch,setShowSearch,

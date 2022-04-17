@@ -3,9 +3,11 @@ const bcrypt = require("bcrypt");
 const Token = require("../models/token");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
+const fs = require("fs");
 const mail = require("../controllers/mail");
 
 let digit;
+let tries = 0;
 const randomNumber = ()=>{
     const randomNumber = Math.floor(1000 + Math.random() * 9000);
     digit = randomNumber;
@@ -67,6 +69,7 @@ async function patchUserPass(req,res){
 }
 
 async function sendEmail(req,res){
+    tries += 1;
     let emailMessage = `<h1>EasyNotes</h1> 
         <p>Verify your email address</p>
         <hr/>
@@ -74,9 +77,17 @@ async function sendEmail(req,res){
         <p>${randomNumber()}</p>
         `
     let emailSubject = "EasyNotes - verify your email address"
+    console.log(tries)
     try{ 
-        await mail(req.body.newEmail,emailMessage,emailSubject);
-        return res.status(200).json({msg:"success"});
+        if(tries <= 3){
+            mail(req.body.newEmail,emailMessage,emailSubject);
+            return res.status(200).json({msg:"success"});
+        }else{
+            setTimeout(()=>{
+                tries = 0
+            },180000)
+            return res.status(422).json({msg:"Please wait a few minutes before trying again."})
+        }
     }catch(err){
         return res.status(500).json({msg:"server error"})
     }
@@ -125,13 +136,21 @@ async function sendResetPassMail(req,res){
         <a href="https://easynotes-gorega.herokuapp.com/reset-pass-redirect/${randomLink}">Link</a>
         `
         let emailSubject = "EasyNotes - reset your account password"
-        await mail(email,emailMessage,emailSubject);
-        await new Token({
-            userId:user._id,
-            token:randomLink,
-            date:new Date().getTime()
-        }).save();
-        return res.status(200).json({msg:"success"});
+        tries+=1;
+        if(tries <= 3){
+            mail(email,emailMessage,emailSubject);
+            await new Token({
+                userId:user._id,
+                token:randomLink,
+                date:new Date().getTime()
+            }).save();
+            return res.status(200).json({msg:"success"});
+        }else{
+            setTimeout(()=>{
+                tries = 0
+            },180000)
+            res.status(422).json({msg:"Please wait a few minutes before trying again."})
+        }
     }catch(err){
         return res.status(500).json({msg:"server error"});
     }
@@ -160,4 +179,40 @@ async function resetUserPass(req,res){
     }
 }
 
-module.exports = {user,patchUsername,patchUserPass,sendEmail,patchUserEmail,sendResetPassMail,resetUserPass};
+async function uploadAvatarPreview(req,res){
+    try{
+        return res.status(200).json({preview:req.file.filename});
+    }catch(err){
+        return res.status(500).json({msg:"server error"});
+    }
+}
+
+async function uploadAvater(req,res){
+    const {userId} = req.user;
+    try{
+        await User.findOneAndUpdate({_id:userId},{image:req.file.filename});
+        return res.status(200).json({msg:"success"})
+    }catch(err){
+        return res.status(500).json({msg:"server error"});
+    }
+}
+
+async function deleteAvater(req,res){
+    const {path} = req.params;
+    const {userId} = req.user;
+    try{
+        if(userId){
+            fs.unlink(`avaters/${path}`,(err)=>{
+                if(err){
+                    return res.status(404).json({msg:"Unfound"})
+                }
+                return res.status(200).json({msg:"deleted successfuly"})
+            })
+        }
+    }catch(err){
+        return res.status(500).json({msg:"server error"});
+    }
+}
+
+
+module.exports = {user,patchUsername,patchUserPass,sendEmail,patchUserEmail,sendResetPassMail,resetUserPass,uploadAvatarPreview,uploadAvater,deleteAvater};

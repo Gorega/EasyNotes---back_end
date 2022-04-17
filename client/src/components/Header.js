@@ -32,12 +32,12 @@ export default function Header({showHomeLink}){
             <input type="text" ref={searchInputRef} autoComplete="false" name="text" placeholder="Search by note content or date ..." value={searchValue} onChange={(e)=> setSearchValue(e.target.value)} />
         </div>}
         <div className={`${styles.userProfile} ${showSearch && styles.hide}`} onMouseOver={()=> setShowUserMenu(true)}>
-            <img src={user.image} />
+            <img src={`${server}/avaters/${user.image}`} />
             <FontAwesomeIcon icon={faSortDown} />
             <div className={`${styles.userMenu} ${showUserMenu && styles.active}`} onMouseLeave={()=> setShowUserMenu(false)}>
                 <ul>
                     <li>
-                        <img src={user.image} alt="" />
+                        <img src={`${server}/avaters/${user.image}`} alt="" />
                         <h3>{user.username}</h3>
                         <FontAwesomeIcon icon={faGear} onClick={()=> Navigate("/settings")} />
                     </li>
