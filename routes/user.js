@@ -19,7 +19,7 @@ router.route("/login").post(login);
 router.route("/logout").get(logout);
 router.route("/user/email-reset-pass").post(sendResetPassMail);
 router.route("/user/reset-pass/:token").patch(resetUserPass);
-router.route("/user/upload-avatar").post(upload.single('avatar'),uploadAvatarPreview).patch(auth,upload.single('avatar'),updateAvatar);
+router.route("/user/upload-avatar").post(upload.single('avatar'),uploadAvatarPreview).patch(auth,updateAvatar);
 router.route("/user/delete-avatar/:path").delete(auth,deleteAvater);
 
 module.exports = router;
