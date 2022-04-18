@@ -60,7 +60,7 @@ export default function Settings(){
         setAvatarStatus("pending")
         const data = new FormData();
         data.append("avatar",e.target.files[0])
-        axios.post(`${server}/api/v1/user/upload-avatar-preview`,data,{withCredentials:true})
+        axios.post(`${server}/api/v1/user/upload-avatar`,data,{withCredentials:true})
         .then(res => {
             console.log(res)
             setAvatarStatus("fulfilled")
@@ -70,11 +70,9 @@ export default function Settings(){
         .catch(err => setAvatarStatus("rejected"));
     }
 
-    const uploadAvater = ()=>{
+    const updateAvatar = ()=>{
         setAvatarStatus("pending")
-        const data = new FormData();
-        data.append("avatar",avatarImage)
-        axios.post(`${server}/api/v1/user/upload-avatar`,data,{withCredentials:true})
+        axios.patch(`${server}/api/v1/user/upload-avatar`,{avatar:avatarPreview},{withCredentials:true})
         .then(res => {
             setAvatarStatus("fulfilled")
             setAvatarPreview(null);
@@ -133,7 +131,7 @@ return <>
                 <div className={styles.upload}>
                     <input id="upload" type="file" style={{display:"none"}} onChange={getAvatarPreview}/>
                     {avatarPreview ? <ul className={styles.patch}>
-                        <li onClick={uploadAvater}>Save</li>
+                        <li onClick={updateAvatar}>Save</li>
                         <li onClick={deleteAvatar}>Cancel</li>
                     </ul> : <label htmlFor="upload">Upload a picture</label>}
                 </div>

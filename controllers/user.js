@@ -187,10 +187,11 @@ async function uploadAvatarPreview(req,res){
     }
 }
 
-async function uploadAvater(req,res){
+async function updateAvatar(req,res){
     const {userId} = req.user;
+    const {avatar} = req.body;
     try{
-        await User.findOneAndUpdate({_id:userId},{image:req.file.filename});
+        await User.findOneAndUpdate({_id:userId},{image:avatar});
         return res.status(200).json({msg:"success"})
     }catch(err){
         return res.status(500).json({msg:"server error"});
@@ -215,4 +216,4 @@ async function deleteAvater(req,res){
 }
 
 
-module.exports = {user,patchUsername,patchUserPass,sendEmail,patchUserEmail,sendResetPassMail,resetUserPass,uploadAvatarPreview,uploadAvater,deleteAvater};
+module.exports = {user,patchUsername,patchUserPass,sendEmail,patchUserEmail,sendResetPassMail,resetUserPass,uploadAvatarPreview,updateAvatar,deleteAvater};
