@@ -21,7 +21,7 @@ async function login(req,res){
             httpOnly:true,
             useCredentials: false,
         })
-
+        res.cookie("signed",true)
         return res.status(200).json({userId:user._id,token})
     }catch(err){
         return res.status(500).json("server Error");

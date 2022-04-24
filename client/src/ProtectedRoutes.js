@@ -1,7 +1,11 @@
 import {Outlet} from "react-router-dom";
+import { useContext } from "react";
+import { AppContext } from "./AppContext";
+
 
 function ProtectedRoutes(){
-return localStorage.getItem("user") ? <Outlet /> : window.location.replace("/login")
+    const {signedUser} = useContext(AppContext);
+    return signedUser ? <Outlet /> : window.location.replace("/login")
 }
 
 export default ProtectedRoutes;

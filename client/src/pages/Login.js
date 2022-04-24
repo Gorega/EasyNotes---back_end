@@ -7,12 +7,13 @@ import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../AppContext";
 import useForm from "../components/lib/useForm";
 
+
 export default function Login(){
     const {error,success,loading,submitHandler} = useForm();
     const [username,setUsername] = useState(null);
     const [email,setEmail] = useState(null);
     const [password,setPassword] = useState(null);
-    const {logginStatus,setLogginStats} = useContext(AppContext);
+    const {logginStatus,setLogginStats,signedUser} = useContext(AppContext);
     const Navigate = useNavigate();
 
     const login = ()=>{
@@ -23,7 +24,7 @@ export default function Login(){
     }
 
     useEffect(()=>{
-        if(localStorage.getItem("user")){
+        if(signedUser){
             window.location.replace("/dashboard");
         }else{
             setLogginStats(false)

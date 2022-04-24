@@ -1,6 +1,7 @@
 import React,{useEffect, useState} from "react";
 import axios from "axios";
 import {server} from "./config";
+import Cookies from 'js-cookie';
 
 export const AppContext = React.createContext({});
 
@@ -11,6 +12,7 @@ const AppProvider = (props)=>{
     const [searchValue,setSearchValue] = useState("");
     const [showSearch,setShowSearch] = useState(false);
     const [user,setUser] = useState({});
+    const signedUser = Cookies.get("signed");
 
     const fetchUserData = ()=>{
         axios.get(`${server}/api/v1/user`,{withCredentials:true})
@@ -21,7 +23,7 @@ const AppProvider = (props)=>{
     }
 
     useEffect(()=>{
-        if(localStorage.getItem("user")){
+        if(signedUser){
             fetchUserData();
         }
     },[])
@@ -34,6 +36,7 @@ const AppProvider = (props)=>{
         logginStatus,setLogginStats,
         searchValue,setSearchValue,
         showSearch,setShowSearch,
+        signedUser
     }}>
         {props.children}
     </AppContext.Provider>

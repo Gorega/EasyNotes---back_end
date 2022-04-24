@@ -15,7 +15,7 @@ export default function useForm(){
             setSuccess({status:true,msg:successMsg});
             switch(form){
                 case "setStorage":
-                    localStorage.setItem("user","loggedin")
+                    // localStorage.setItem("user","loggedin")
                     window.location.replace("/dashboard");
                 break;
                 case "redirectToLogin":

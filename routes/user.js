@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const auth = require("../auth/auth");
+const {auth} = require("../auth/auth");
 const {user,patchUsername,patchUserPass,sendEmail,patchUserEmail,sendResetPassMail,resetUserPass,uploadAvatarPreview,updateAvatar,deleteAvater} = require("../controllers/user");
 const {activateAccount,register} = require("../controllers/register");
 const login = require("../controllers/login");

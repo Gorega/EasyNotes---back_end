@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const Connect = require("./db/connect");
 const userRoute = require("./routes/user");
 const noteRoute = require("./routes/note");
+const { checkAuth } = require("./auth/auth");
 
 const corsOptions = {
     origin: ["https://easynotes-gorega.herokuapp.com","http://localhost:3000"],
