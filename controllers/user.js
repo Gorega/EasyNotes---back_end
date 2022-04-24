@@ -4,6 +4,7 @@ const Token = require("../models/token");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const fs = require("fs");
+const path = require("path");
 const mail = require("../controllers/mail");
 
 let digit;
@@ -180,7 +181,10 @@ async function resetUserPass(req,res){
 
 async function uploadAvatarPreview(req,res){
     try{
-        return res.status(200).json({preview:req.file.filename});
+        // console.log(req.file)
+        // console.log(path.extname(req.file.originalname))
+        const avatarName = req.file.fieldname + "-" + Date.now() + path.extname(req.file.originalname);
+        return res.status(200).json({preview:avatarName});
     }catch(err){
         return res.status(500).json({msg:"server error"});
     }

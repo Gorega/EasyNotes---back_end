@@ -7,7 +7,6 @@ const cookieParser = require("cookie-parser");
 const Connect = require("./db/connect");
 const userRoute = require("./routes/user");
 const noteRoute = require("./routes/note");
-const { checkAuth } = require("./auth/auth");
 
 const corsOptions = {
     origin: ["https://easynotes-gorega.herokuapp.com","http://localhost:3000"],
@@ -21,7 +20,8 @@ app.use(cookieParser());
 app.use("/api/v1",userRoute);
 app.use("/api/v1",noteRoute);
 
-app.use(express.static(path.join(__dirname, "/avaters/build")));
+app.use("/avaters",express.static("avaters"));
+app.use(express.static(path.join(__dirname, "../avaters/build")));
 app.use(express.static(path.join(__dirname, "/client/build")));
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '/client/build', 'index.html'));
