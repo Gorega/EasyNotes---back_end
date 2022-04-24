@@ -29,7 +29,7 @@ async function register(req,res){
         // register user
         const user = await User.create({username,email,password,confirmPass});
         // create activation link
-        const randomLink = jwt.sign({username},process.env.JWT_SECRET_CODE);
+        const randomLink = jwt.sign({username},process.env.JWT_SECRET_CODE,{expiresIn:"1h"});
         let emailMessage = `<h1>EasyNotes</h1> 
         <p>Verify your email address</p>
         <hr/>

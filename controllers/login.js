@@ -16,12 +16,15 @@ async function login(req,res){
         if(!user.active){
             return res.status(422).json({msg:"please verify you account"});
         }
-        const token = jwt.sign({userId:user._id,username:user.username,email:user.email},process.env.JWT_SECRET_CODE)
+        const token = jwt.sign({userId:user._id,username:user.username,email:user.email},process.env.JWT_SECRET_CODE,{expiresIn:process.env.JWT_LIFETIME})
         res.cookie("token",token,{
             httpOnly:true,
             useCredentials: false,
+            maxAge: 1000 * 3600 * 24 * 30 * 1
         })
-        res.cookie("signed",true)
+        res.cookie("signed",true,{
+            maxAge: 1000 * 3600 * 24 * 30 * 1
+        })
         return res.status(200).json({userId:user._id,token})
     }catch(err){
         return res.status(500).json("server Error");

@@ -77,7 +77,6 @@ async function sendEmail(req,res){
         <p>${randomNumber()}</p>
         `
     let emailSubject = "EasyNotes - verify your email address"
-    console.log(tries)
     try{ 
         if(tries <= 3){
             mail(req.body.newEmail,emailMessage,emailSubject);
@@ -126,7 +125,7 @@ async function sendResetPassMail(req,res){
             return res.status(404).json({msg:"Email entered not exist"});
         }
         // create randomlink
-        const randomLink = jwt.sign({data:"randomtext"},process.env.JWT_SECRET_CODE);
+        const randomLink = jwt.sign({data:"randomtext"},process.env.JWT_SECRET_CODE,{expiresIn:"1h"});
 
         // send mail
         let emailMessage = `<h1>EasyNotes</h1> 
