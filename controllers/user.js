@@ -183,8 +183,8 @@ async function uploadAvatarPreview(req,res){
     try{
         // console.log(req.file)
         // console.log(path.extname(req.file.originalname))
-        const avatarName = req.file.fieldname + "-" + Date.now() + path.extname(req.file.originalname);
-        return res.status(200).json({preview:avatarName});
+        // const avatarName = req.file.fieldname + "-" + Date.now() + path.extname(req.file.originalname);
+        return res.status(200).json({preview:req.file.filename});
     }catch(err){
         return res.status(500).json({msg:"server error"});
     }

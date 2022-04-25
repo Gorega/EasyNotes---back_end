@@ -21,7 +21,7 @@ app.use("/api/v1",userRoute);
 app.use("/api/v1",noteRoute);
 
 app.use("/avaters",express.static("avaters"));
-app.use(express.static(path.join(__dirname, "../avaters/build")));
+app.use(express.static(path.join(__dirname, "/avaters/build")));
 app.use(express.static(path.join(__dirname, "/client/build")));
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '/client/build', 'index.html'));
