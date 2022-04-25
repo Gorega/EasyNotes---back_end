@@ -4,7 +4,6 @@ const Token = require("../models/token");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const fs = require("fs");
-const path = require("path");
 const mail = require("../controllers/mail");
 
 let digit;
