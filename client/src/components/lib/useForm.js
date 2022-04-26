@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 
 export default function useForm(){
@@ -5,34 +6,22 @@ export default function useForm(){
     const [error,setError] = useState({status:false,msg:""});
     const [success,setSuccess] = useState({status:false,msg:""});
 
-    const submitHandler = (method,apiUrl,transformData,form,successMsg)=>{
+    const submitHandler = (method,url,params)=>{
         setLoading(true)
         setError({status:false})
         setSuccess({status:false})
-        method(apiUrl,transformData && transformData,{withCredentials:true})
+        return axios[method](url,params,{withCredentials:true})
         .then(res => {
             setLoading(false)
-            setSuccess({status:true,msg:successMsg});
-            switch(form){
-                case "setStorage":
-                    // localStorage.setItem("user","loggedin")
-                    window.location.replace("/dashboard");
-                break;
-                case "redirectToLogin":
-                    window.location.replace("/login");
-                break;
-                case "reload":
-                    window.location.reload();
-                break;
-                default:
-                    return;
-            }
+            setSuccess({status:true,msg:""});
+            return true;
         })
         .catch(err => {
             setLoading(false)
             setError({status:true,msg:err.response.data.msg})
+            return false;
         });
     }
     
-    return {loading,setLoading,error,setError,success,submitHandler}
+    return {loading,setLoading,error,setError,success,setSuccess,submitHandler}
 }

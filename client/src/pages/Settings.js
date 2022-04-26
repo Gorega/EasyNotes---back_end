@@ -3,7 +3,6 @@ import Header from "../components/Header";
 import SettingsModal from "../components/SettingsModal";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../AppContext";
-import axios from "axios";
 import { server } from "../config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTriangleExclamation,faSpinner } from "@fortawesome/free-solid-svg-icons";
@@ -25,69 +24,75 @@ export default function Settings(){
     const [avatarImage,setAvatarImage] = useState(null);
     const [avatarStatus,setAvatarStatus] = useState(null);
 
-    const pathUsername = (e)=>{
+    const pathUsername = async (e)=>{
         e.preventDefault();
-        return submitHandler(axios.patch,
-            `${server}/api/v1/user/username-reset`,
-            {newUsername:newUsername ? newUsername : user.username},
-            "reload" )
+        const success = await submitHandler("patch",`${server}/api/v1/user/username-reset`,{newUsername:newUsername ? newUsername : user.username})
+        if(success){
+            window.location.reload();
+        }
     }
 
-    const patchUserPass = (e)=>{
+    const patchUserPass = async (e)=>{
         e.preventDefault();
-        return submitHandler(axios.patch,
-            `${server}/api/v1/user/password-reset`,
-            {currentPass,newPass,confirmNewPass},
-            "reload" )
+        const success = await submitHandler("patch",`${server}/api/v1/user/password-reset`,{currentPass,newPass,confirmNewPass})
+        if(success){
+            window.location.reload();
+        }
     }
 
-    const sendEmailHandler = ()=>{
-        setError({status:false})
-        axios.post(`${server}/api/v1/user/email-send`,{newEmail},{withCredentials:true})
-        .then(res => setSendEmail(true))
-        .catch(err=> setError({status:true,msg:err.response.data.msg}));
+    const sendEmailHandler = async()=>{
+        setSendEmail(false)
+        const success = await submitHandler("post",`${server}/api/v1/user/email-send`,{newEmail})
+        if(success){
+            setSendEmail(true)
+        }else{
+            setSendEmail(false)
+        }
     }
 
-    const patchUserEmail = (e)=>{
+    const patchUserEmail = async (e)=>{
         e.preventDefault();
-        return submitHandler(axios.patch,
-            `${server}/api/v1/user/email-reset`,
-            {newEmail,verificationCode,password:currentPass},
-            "reload")
+        const success = await submitHandler("patch",`${server}/api/v1/user/email-reset`,{newEmail,verificationCode,password:currentPass})
+        if(success){
+            window.location.reload();
+        }
+
     }
 
-    const getAvatarPreview = (e)=>{
+    const getAvatarPreview = async (e)=>{
         setAvatarStatus("pending")
         const data = new FormData();
         data.append("avatar",e.target.files[0])
-        axios.post(`${server}/api/v1/user/upload-avatar`,data,{withCredentials:true})
-        .then(res => {
-            console.log(res)
+        const success = await submitHandler("post",`${server}/api/v1/user/upload-avatar`,data)
+        if(success){
             setAvatarStatus("fulfilled")
-            setAvatarPreview(res.data.preview)
+            setAvatarPreview(e.target.files[0].name)
             setAvatarImage(e.target.files[0])
-        })
-        .catch(err => setAvatarStatus("rejected"));
+        }else{
+            setAvatarStatus("rejected")
+        }
     }
 
-    const updateAvatar = ()=>{
+    const updateAvatar = async ()=>{
         setAvatarStatus("pending")
-        axios.patch(`${server}/api/v1/user/upload-avatar`,{avatar:avatarPreview},{withCredentials:true})
-        .then(res => {
+        const success = await submitHandler("patch",`${server}/api/v1/user/upload-avatar`,{avatar:avatarPreview})
+        if(success){
             setAvatarStatus("fulfilled")
             setAvatarPreview(null);
-        })
-        .catch(err => setAvatarStatus("rejected"));
+        }else{
+            setAvatarStatus("rejected")
+        }
     }
 
-    const deleteAvatar = ()=>{
+    const deleteAvatar = async ()=>{
         setAvatarStatus("pending")
-        axios.delete(`${server}/api/v1/user/delete-avatar/${avatarPreview}`,{withCredentials:true})
-        .then(res => {
+        const success = await submitHandler("delete",`${server}/api/v1/user/delete-avatar/${avatarPreview}`)
+        if(success){
             setAvatarStatus("fulfilled")
-            setAvatarPreview(null)
-        })
-        .catch(err => setAvatarStatus("rejected"));
+            setAvatarPreview(null);
+        }else{
+            setAvatarStatus("rejected")
+        }
     }
 
     useEffect(()=>{

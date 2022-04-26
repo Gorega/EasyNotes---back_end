@@ -1,25 +1,25 @@
 import styles from "../styles/preLogin/form.module.css";
 import Layout from "../components/preLogin/Layout";
 import {server} from "../config";
-import axios from "axios";
 import { useState,useEffect, useContext } from "react";
 import {AppContext} from "../AppContext";
 import useForm from "../components/lib/useForm";
 
 export default function Register(){
-    const {error,success,loading,submitHandler} = useForm();
+    const {error,success,setSuccess,loading,submitHandler} = useForm();
     const [username,setUsername] = useState(null);
     const [password,setPassword] = useState(null);
     const [email,setEmail] = useState(null);
     const [confirmPass,setConfirmPass] = useState(null);
     const {logginStatus,setLogginStats} = useContext(AppContext);
 
-    const register = ()=>{
-        submitHandler(axios.post,
-                    `${server}/api/v1/register`,
-                    {username,password,email,confirmPass},
-                    "",
-                    "A message has been sent to your email address, please verify your account")
+    const register = async ()=>{
+        const success = await submitHandler("post",`${server}/api/v1/register`,{username,password,email,confirmPass});
+        if(success){
+            setSuccess({status:true,msg:"Email has been sent to your email address, please verify your account"})
+        }else{
+            setSuccess({status:false})
+        }
     }
     
     useEffect(()=>{

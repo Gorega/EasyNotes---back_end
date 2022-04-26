@@ -50,7 +50,7 @@ export default function Note({noteId,noteContent,noteDate,noteColor,existNote,ad
         setNoteText(noteContent)
     },[noteContent])
 
-    return <div className={styles.note} style={{backgroundColor:noteColor}} noteId={noteId}>
+    return <div className={styles.note} style={{backgroundColor:noteColor}} noteid={noteId}>
         <div className={styles.text}>
         {editStatus ? <textarea autoFocus className={styles.inputText} type="text" value={noteText} onChange={(e)=> setNoteText(e.target.value)} />
         : 

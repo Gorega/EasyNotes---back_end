@@ -1,7 +1,6 @@
 import styles from "../styles/preLogin/form.module.css";
 import Layout from "../components/preLogin/Layout";
 import {server} from "../config";
-import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../AppContext";
@@ -16,11 +15,11 @@ export default function Login(){
     const {logginStatus,setLogginStats,signedUser} = useContext(AppContext);
     const Navigate = useNavigate();
 
-    const login = ()=>{
-            return submitHandler(axios.post,
-            `${server}/api/v1/login`,
-            {username,email,password},
-            "setStorage" )
+    const login = async ()=>{
+        const success = await submitHandler("post",`${server}/api/v1/login`,{username,email,password});
+        if(success){
+            window.location.replace("/dashboard");
+        }
     }
 
     useEffect(()=>{

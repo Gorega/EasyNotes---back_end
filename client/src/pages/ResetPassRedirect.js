@@ -1,5 +1,4 @@
 import styles from "../styles/pages/ResetPassRedirect.module.css";
-import axios from "axios";
 import { useState } from "react"
 import { server } from "../config";
 import { useParams } from "react-router-dom";
@@ -14,12 +13,12 @@ export default function ResetPassRedirect(){
     const [password,setPassword] = useState(null);
     const [confirmPass,setConfirmPass] = useState(null);
 
-    const resetUserPassHandler = (e)=>{
+    const resetUserPassHandler = async (e)=>{
         e.preventDefault();
-        return submitHandler(axios.post,
-            `${server}/api/v1/user/reset-pass/${token}`,
-            {newPassword:password,comfrimNewPass:confirmPass},
-            "redirectToLogin")
+        const success = await submitHandler("post",`${server}/api/v1/user/reset-pass/${token}`,{newPassword:password,comfrimNewPass:confirmPass})
+        if(success){
+            window.location.replace("/login")
+        }
     }
 
     return <div className={styles.main}>

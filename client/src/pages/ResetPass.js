@@ -1,21 +1,21 @@
 import styles from "../styles/preLogin/form.module.css";
 import Layout from "../components/preLogin/Layout";
-import axios from "axios";
 import { server } from "../config";
 import { useState } from "react";
 import useForm from "../components/lib/useForm";
 
 export default function ResetPass(){
-    const {error,success,loading,submitHandler} = useForm();
+    const {error,success,setSuccess,loading,submitHandler} = useForm();
     const [email,setEmail] = useState(null);
 
-    const sendResetMailHandler = (e)=>{
+    const sendResetMailHandler = async (e)=>{
         e.preventDefault();
-        return submitHandler(axios.post,
-            `${server}/api/v1/user/email-reset-pass`,
-            {email}),
-            "",
-            "a link has been sent to your email address"
+        const success = await submitHandler("post",`${server}/api/v1/user/email-reset-pass`,{email});
+        if(success){
+            setSuccess({status:true,msg:"A link has been sent to your email address"})
+        }else{
+            setSuccess({status:false})
+        }
     }
 
 return <Layout
