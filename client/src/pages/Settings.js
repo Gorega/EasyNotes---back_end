@@ -4,6 +4,7 @@ import SettingsModal from "../components/SettingsModal";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../AppContext";
 import { server } from "../config";
+import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTriangleExclamation,faSpinner } from "@fortawesome/free-solid-svg-icons";
 import useForm from "../components/lib/useForm";
@@ -63,14 +64,13 @@ export default function Settings(){
         setAvatarStatus("pending")
         const data = new FormData();
         data.append("avatar",e.target.files[0])
-        const success = await submitHandler("post",`${server}/api/v1/user/upload-avatar`,data)
-        if(success){
+        axios.post(`${server}/api/v1/user/upload-avatar`,data)
+        .then(res => {
             setAvatarStatus("fulfilled")
-            setAvatarPreview(e.target.files[0].name)
+            setAvatarPreview(res.data.preview)
             setAvatarImage(e.target.files[0])
-        }else{
-            setAvatarStatus("rejected")
-        }
+        })
+        .catch(err => setAvatarStatus("rejected"))
     }
 
     const updateAvatar = async ()=>{

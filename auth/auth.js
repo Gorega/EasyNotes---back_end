@@ -11,7 +11,7 @@ async function auth(req,res,next){
         req.user = {userId:payload.userId,username:payload.username,email:payload.email};
         next();
     }catch(err){
-        return res.status(500).json({msg:"Unathorized"})
+        return res.status(401).json({msg:"Unathorized"})
     }
 
 }

@@ -200,16 +200,13 @@ async function updateAvatar(req,res){
 
 async function deleteAvater(req,res){
     const {path} = req.params;
-    const {userId} = req.user;
     try{
-        if(userId){
-            fs.unlink(`avaters/${path}`,(err)=>{
-                if(err){
-                    return res.status(404).json({msg:"Unfound"})
-                }
-                return res.status(200).json({msg:"deleted successfuly"})
-            })
-        }
+        fs.unlink(`avaters/${path}`,(err)=>{
+            if(err){
+                return res.status(404).json({msg:"Unfound"})
+            }
+            return res.status(200).json({msg:"deleted successfuly"})
+        })
     }catch(err){
         return res.status(500).json({msg:"server error"});
     }
