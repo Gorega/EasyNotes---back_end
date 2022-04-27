@@ -15,10 +15,6 @@ myOAuth2Client.setCredentials({
 const myAccessToken = myOAuth2Client.getAccessToken()
 
 const mail = (to,mailMessage,mainSubject) =>{
-        if(!to){
-          throw new Error('BROKEN')
-        }
-
       // send email
       var transporter = nodemailer.createTransport({
         service: 'gmail',

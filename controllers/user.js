@@ -8,6 +8,7 @@ const mail = require("../controllers/mail");
 
 let digit;
 let tries = 0;
+let expiresAt;
 const randomNumber = ()=>{
     const randomNumber = Math.floor(1000 + Math.random() * 9000);
     digit = randomNumber;
@@ -69,7 +70,7 @@ async function patchUserPass(req,res){
 }
 
 async function sendEmail(req,res){
-    tries += 1;
+    const {newEmail} = req.body;
     let emailMessage = `<h1>EasyNotes</h1> 
         <p>Verify your email address</p>
         <hr/>
@@ -78,15 +79,23 @@ async function sendEmail(req,res){
         `
     let emailSubject = "EasyNotes - verify your email address"
     try{ 
-        if(tries <= 3){
-            mail(req.body.newEmail,emailMessage,emailSubject);
-            return res.status(200).json({msg:"success"});
-        }else{
-            setTimeout(()=>{
-                tries = 0
-            },180000)
-            return res.status(422).json({msg:"Please wait a few minutes before trying again."})
+        if(!newEmail){
+            return res.status(422).json({msg:"Please enter a valid email address"})
         }
+        const user = await User.findOne({email:newEmail});
+        if(user){
+            return res.status(422).json({msg:"Email provided is used,please choose unused one"});
+        }
+        tries += 1;
+        if(tries <= 3){
+            mail(newEmail,emailMessage,emailSubject);
+            expiresAt = new Date().getTime();
+            return res.status(200).json({msg:"success"});
+        }
+        setTimeout(()=>{
+            tries = 0
+        },300000)
+        return res.status(422).json({msg:"Please wait a few minutes before trying again."})
     }catch(err){
         return res.status(500).json({msg:"server error"})
     }
@@ -97,9 +106,9 @@ async function patchUserEmail(req,res){
     const {newEmail,verificationCode,password} = req.body;
     try{
         const user = await User.findById({_id:userId});
-        
-        if(!newEmail){
-            return res.status(422).json({msg:"please provide a valid email address"});
+
+        if(!password){
+            return res.status(422).json({msg:"Incorrect password"});
         }
         // insert your password to authorize changing email
         const comparePass = await bcrypt.compare(password,user.password);
@@ -107,9 +116,18 @@ async function patchUserEmail(req,res){
             return res.status(422).json({msg:"Incorrect password"});
         }
 
+        if(!newEmail){
+            return res.status(422).json({msg:"Please provide a valid email address"});
+        }
+        if(new Date().getTime() > new Date(expiresAt + 10*60000)){
+            return res.status(404).json({msg:"Expired verification code"});
+        }
+        
+        // insert verifcation code to authorize changing email
         if(verificationCode != digit || !verificationCode){
             return res.status(422).json({msg:"Incorrect verification code"});
         }
+       
         await User.findOneAndUpdate({email:email},{email:newEmail});
         return res.status(200).json({msg:"Your email address has been updated successfuly"});
     }catch(err){
@@ -141,13 +159,12 @@ async function sendResetPassMail(req,res){
             await new Token({
                 userId:user._id,
                 token:randomLink,
-                date:new Date().getTime()
             }).save();
             return res.status(200).json({msg:"success"});
         }else{
             setTimeout(()=>{
                 tries = 0
-            },180000)
+            },300000)
             res.status(422).json({msg:"Please wait a few minutes before trying again."})
         }
     }catch(err){
@@ -156,31 +173,38 @@ async function sendResetPassMail(req,res){
 }
 
 async function resetUserPass(req,res){
-    const {token} = req.params;
-    let {newPassword,comfrimNewPass} = req.body;
-    try{
-        const user = await Token.findOne({token:token});
-        if(!newPassword || !comfrimNewPass || newPassword.length < 8){
-            return res.status(422).json({msg:"Please type a vaild password"});
-        }
-        if(newPassword !== comfrimNewPass){
-            return res.status(422).json({msg:"Password don't match"});
-        }
-        const hashPassword = await bcrypt.hash(newPassword,10);
-        newPassword = hashPassword;
-        confirmPass = hashPassword;
-        await User.findOneAndUpdate({_id:mongoose.Types.ObjectId(user.userId)},{password:newPassword,confirmPass:comfrimNewPass});
-        await Token.deleteMany({});
-        return res.status(200).json({msg:"active"});
+        const {uri} = req.query;
+        let {newPassword,comfrimNewPass} = req.body;
+        try{
+            if(!newPassword || !comfrimNewPass || newPassword.length < 8){
+                return res.status(422).json({msg:"Please type a vaild password"});
+            }
+            if(newPassword !== comfrimNewPass){
+                return res.status(422).json({msg:"Password don't match"});
+            }
+            const hashPassword = await bcrypt.hash(newPassword,10);
+            newPassword = hashPassword;
+            comfrimNewPass = hashPassword;
+            const user = await Token.findOne({token:uri});
+            if(new Date().getTime() > new Date(user.date.getTime() + 10*60000)){
+                return res.status(404).json({msg:"Expired link"});
+            }
+            await User.findOneAndUpdate({_id:mongoose.Types.ObjectId(user.userId)},{password:newPassword,confirmPass:comfrimNewPass});
+            await Token.deleteMany({});
+            return res.status(200).json({msg:"You password has been reset successfuly"});
 
-    }catch(err){
-        return res.status(500).json({msg:"server error"});
-    }
+        }catch(err){
+            return res.status(500).json({msg:"server error"});
+        }
 }
 
 async function uploadAvatarPreview(req,res){
     try{
         // const avatarName = req.file.fieldname + "-" + Date.now() + path.extname(req.file.originalname);
+        if (!req.file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
+            req.fileValidationError = 'Only image files are allowed!';
+            return res.status(422).json({msg:"Only image files are allowed!"})
+        }
         return res.status(200).json({preview:req.file.filename});
     }catch(err){
         return res.status(500).json({msg:"server error"});
@@ -199,9 +223,9 @@ async function updateAvatar(req,res){
 }
 
 async function deleteAvater(req,res){
-    const {path} = req.params;
+    const {file} = req.query;
     try{
-        fs.unlink(`avaters/${path}`,(err)=>{
+        fs.unlink(`avaters/${file}`,(err)=>{
             if(err){
                 return res.status(404).json({msg:"Unfound"})
             }

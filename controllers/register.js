@@ -8,6 +8,14 @@ const mail = require("../controllers/mail");
 async function register(req,res){
     let {username,email,password,confirmPass} = req.body;
     try{
+        const existEmail = await User.findOne({email});
+        const existUsername = await User.findOne({username});
+        if(existEmail){
+            return res.status(422).json({msg:"Email provided is already exist"})
+        }
+        if(existUsername){
+            return res.status(422).json({msg:"Username provided is already exist"})
+        }
         if(!username){
             return res.status(422).json({msg:"Username should not be empty"});
         }
@@ -17,8 +25,8 @@ async function register(req,res){
         if(!email){
             return res.status(422).json({msg:"Please provide a valid email address"});
         }
-        if(!password){
-            return res.status(422).json({msg:"Password should not be empty"});
+        if(!password || password.length < 8){
+            return res.status(422).json({msg:"Please type a valid password"});
         }
         if(password !== confirmPass){
             return res.status(422).json({msg:"password don't match"});
@@ -50,9 +58,9 @@ async function register(req,res){
 }
 
 async function activateAccount(req,res){
-    const {token} = req.params;
+    const {uri} = req.query;
     try{
-        const user = await Token.findOne({token:token});
+        const user = await Token.findOne({token:uri});
         await User.findOneAndUpdate({_id:mongoose.Types.ObjectId(user.userId)},{active:true});
         await Token.deleteMany({});
         return res.status(200).json({msg:"active"});

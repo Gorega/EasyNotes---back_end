@@ -15,7 +15,7 @@ export default function ResetPassRedirect(){
 
     const resetUserPassHandler = async (e)=>{
         e.preventDefault();
-        const success = await submitHandler("post",`${server}/api/v1/user/reset-pass/${token}`,{newPassword:password,comfrimNewPass:confirmPass})
+        const success = await submitHandler("patch",`${server}/api/v1/user/pass-reset?uri=${token}`,{newPassword:password,comfrimNewPass:confirmPass})
         if(success){
             window.location.replace("/login")
         }

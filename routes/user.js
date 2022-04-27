@@ -9,18 +9,14 @@ const logout = require("../controllers/logout");
 const multer  = require('multer')
 const upload = multer({dest:path.join(__dirname,'../avaters')})
 
-router.route("/user").get(auth,user);
-router.route("/user/username-reset").patch(auth,patchUsername);
-router.route("/user/password-reset").patch(auth,patchUserPass);
-router.route("/user/email-send").post(sendEmail);
-router.route("/user/email-reset").patch(auth,patchUserEmail)
-router.route("/register").post(register);
-router.route("/user/activate-account/:token").patch(activateAccount);
+router.route("/register").post(register).patch(activateAccount);
 router.route("/login").post(login);
 router.route("/logout").get(logout);
-router.route("/user/email-reset-pass").post(sendResetPassMail);
-router.route("/user/reset-pass/:token").patch(resetUserPass);
-router.route("/user/upload-avatar").post(upload.single("avatar"),uploadAvatarPreview).patch(auth,updateAvatar);
-router.route("/user/delete-avatar/:path").delete(deleteAvater);
+router.route("/user").get(auth,user);
+router.route("/user/pass-reset").post(sendResetPassMail).patch(resetUserPass);
+router.route("/user/email-reset").post(sendEmail).patch(auth,patchUserEmail)
+router.route("/user/username-reset").patch(auth,patchUsername);
+router.route("/user/password-reset").patch(auth,patchUserPass);
+router.route("/user/avatar").post(upload.single("avatar"),uploadAvatarPreview).patch(auth,updateAvatar).delete(deleteAvater);
 
 module.exports = router;

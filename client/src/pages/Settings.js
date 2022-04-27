@@ -43,7 +43,7 @@ export default function Settings(){
 
     const sendEmailHandler = async()=>{
         setSendEmail(false)
-        const success = await submitHandler("post",`${server}/api/v1/user/email-send`,{newEmail})
+        const success = await submitHandler("post",`${server}/api/v1/user/email-reset`,{newEmail})
         if(success){
             setSendEmail(true)
         }else{
@@ -53,29 +53,34 @@ export default function Settings(){
 
     const patchUserEmail = async (e)=>{
         e.preventDefault();
-        const success = await submitHandler("patch",`${server}/api/v1/user/email-reset`,{newEmail,verificationCode,password:currentPass})
-        if(success){
-            window.location.reload();
+        if(sendEmail){
+            const success = await submitHandler("patch",`${server}/api/v1/user/email-reset`,{newEmail,verificationCode,password:currentPass})
+            if(success){
+                window.location.reload();
+            }
         }
-
     }
 
     const getAvatarPreview = async (e)=>{
+        setError({status:false})
         setAvatarStatus("pending")
         const data = new FormData();
         data.append("avatar",e.target.files[0])
-        axios.post(`${server}/api/v1/user/upload-avatar`,data)
+        axios.post(`${server}/api/v1/user/avatar`,data)
         .then(res => {
             setAvatarStatus("fulfilled")
             setAvatarPreview(res.data.preview)
             setAvatarImage(e.target.files[0])
         })
-        .catch(err => setAvatarStatus("rejected"))
+        .catch(err => {
+            setAvatarStatus("rejected")
+            setError({status:true,msg:err.response.data.msg})
+        })
     }
 
     const updateAvatar = async ()=>{
         setAvatarStatus("pending")
-        const success = await submitHandler("patch",`${server}/api/v1/user/upload-avatar`,{avatar:avatarPreview})
+        const success = await submitHandler("patch",`${server}/api/v1/user/avatar`,{avatar:avatarPreview})
         if(success){
             setAvatarStatus("fulfilled")
             setAvatarPreview(null);
@@ -86,10 +91,11 @@ export default function Settings(){
 
     const deleteAvatar = async ()=>{
         setAvatarStatus("pending")
-        const success = await submitHandler("delete",`${server}/api/v1/user/delete-avatar/${avatarPreview}`)
+        const success = await submitHandler("delete",`${server}/api/v1/user/avatar?file=${avatarPreview}`)
         if(success){
             setAvatarStatus("fulfilled")
             setAvatarPreview(null);
+            console.log("deleted");
         }else{
             setAvatarStatus("rejected")
         }

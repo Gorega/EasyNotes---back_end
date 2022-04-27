@@ -10,7 +10,7 @@ export default function ResetPass(){
 
     const sendResetMailHandler = async (e)=>{
         e.preventDefault();
-        const success = await submitHandler("post",`${server}/api/v1/user/email-reset-pass`,{email});
+        const success = await submitHandler("post",`${server}/api/v1/user/pass-reset`,{email});
         if(success){
             setSuccess({status:true,msg:"A link has been sent to your email address"})
         }else{
