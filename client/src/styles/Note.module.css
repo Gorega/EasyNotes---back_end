@@ -53,9 +53,10 @@
 }
 
 .note .footer h4{
-    font-size:14px;
-    font-weight:350;
+    font-size:12px;
+    font-weight:bold;
     cursor: default;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .note .footer .control{

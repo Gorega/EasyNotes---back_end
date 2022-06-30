@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
     },
     image:{
         type:String,
-        default:"https://icon-library.com/images/no-user-image-icon/no-user-image-icon-21.jpg"
+        default:"https://firebasestorage.googleapis.com/v0/b/instagram-clone-a6598.appspot.com/o/profile%2Fdefault.jpeg?alt=media&token=58a03f2d-ebc8-4194-b036-3329eaa12d0e"
     },
     active:{
         type:Boolean,
