@@ -9,7 +9,7 @@ const userRoute = require("./routes/user");
 const noteRoute = require("./routes/note");
 
 const corsOptions = {
-    origin: ["https://easynotes-gorega.herokuapp.com","http://localhost:3000"],
+    origin: ["https://easynotes-gorega-preview.onrender.com","http://localhost:3000"],
     origin: true,
     credentials: true,
   };
