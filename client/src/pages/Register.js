@@ -1,17 +1,18 @@
 import styles from "../styles/preLogin/form.module.css";
-import Layout from "../components/preLogin/Layout";
-import {server} from "../config";
+import {server} from "../lib/config";
 import { useState,useEffect, useContext } from "react";
 import {AppContext} from "../AppContext";
-import useForm from "../components/lib/useForm";
+import useForm from "../lib/useForm";
+import Layout from "../components/preLogin/Layout";
 
 export default function Register(){
-    const {error,success,setSuccess,loading,submitHandler} = useForm();
+    
+    const {loginStatus,setLoginStatus,signedUser} = useContext(AppContext);
     const [username,setUsername] = useState(null);
     const [password,setPassword] = useState(null);
-    const [email,setEmail] = useState(null);
     const [confirmPass,setConfirmPass] = useState(null);
-    const {logginStatus,setLogginStats} = useContext(AppContext);
+    const [email,setEmail] = useState(null);
+    const {error,success,setSuccess,loading,submitHandler} = useForm();
 
     const register = async ()=>{
         const success = await submitHandler("post",`${server}/api/v1/register`,{username,password,email,confirmPass});
@@ -23,14 +24,14 @@ export default function Register(){
     }
     
     useEffect(()=>{
-        if(localStorage.getItem("user")){
+        if(signedUser){
             window.location.replace("/dashboard");
         }else{
-            setLogginStats(false)
+            setLoginStatus(false)
         }
     },[])
 
-    if(logginStatus){
+    if(loginStatus){
         return "loading..."
     }
 

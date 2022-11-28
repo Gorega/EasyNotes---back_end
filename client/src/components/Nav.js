@@ -3,18 +3,19 @@ import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../AppContext";
 
 export default function Nav(){
+    
     const [showColors,setShowColors] = useState(false);
     const {setNNote,showSearch} = useContext(AppContext);
     const colors = [{
-        color:"#FBC770"
+        code:"#FBC770"
     },{
-        color:"#F89871"
+        code:"#F89871"
     },{
-        color:"#E2EC8D"
+        code:"#E2EC8D"
     },{
-        color:"#8AB4F8"
+        code:"#8AB4F8"
     },{
-        color:"#B691FD"
+        code:"#B691FD"
     }]
 
     useEffect(()=>{
@@ -35,8 +36,9 @@ return <div className={styles.nav}>
         <div className={`${styles.colors} ${showColors && styles.show}`}>
             <ul>
                 {colors.map((color,index)=>{
-                    return <li key={index} style={{backgroundColor:color.color}} onClick={()=>{
-                        setNNote({status:true,data:{color:color.color}})
+                    const {code} = color;
+                    return <li key={index} style={{backgroundColor:code}} onClick={()=>{
+                        setNNote({status:true,data:{color:code}})
                     }}></li>
                 })}
             </ul>

@@ -1,17 +1,18 @@
 import styles from "../styles/pages/ResetPassRedirect.module.css";
 import { useState } from "react"
-import { server } from "../config";
+import { server } from "../lib/config";
 import { useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTriangleExclamation,faSpinner,faCheck } from "@fortawesome/free-solid-svg-icons";
-import useForm from "../components/lib/useForm";
+import useForm from "../lib/useForm";
 
 
 export default function ResetPassRedirect(){
-    const {error,success,loading,submitHandler} = useForm();
+
     const {token} = useParams();
     const [password,setPassword] = useState(null);
     const [confirmPass,setConfirmPass] = useState(null);
+    const {error,success,loading,submitHandler} = useForm();
 
     const resetUserPassHandler = async (e)=>{
         e.preventDefault();

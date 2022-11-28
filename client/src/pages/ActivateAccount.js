@@ -1,11 +1,13 @@
 import styles from "../styles/pages/ActivateAccount.module.css";
 import {useParams} from "react-router-dom";
-import {server} from "../config";
-import useForm from "../components/lib/useForm";
+import {server} from "../lib/config";
+import useForm from "../lib/useForm";
 
 export default function ActivateAccount(){
+
     const {token} = useParams(); 
     const {submitHandler} = useForm();
+    
     const activateAccountHander = async ()=>{
         const success = await submitHandler("patch",`${server}/api/v1/register?uri=${token}`);
         if(success){

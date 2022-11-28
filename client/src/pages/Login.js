@@ -1,19 +1,20 @@
 import styles from "../styles/preLogin/form.module.css";
 import Layout from "../components/preLogin/Layout";
-import {server} from "../config";
+import {server} from "../lib/config";
 import {useNavigate} from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../AppContext";
-import useForm from "../components/lib/useForm";
+import useForm from "../lib/useForm";
 
 
 export default function Login(){
-    const {error,success,loading,submitHandler} = useForm();
+
+    const Navigate = useNavigate();
+    const {loginStatus,setLoginStatus,signedUser} = useContext(AppContext);
     const [username,setUsername] = useState(null);
     const [email,setEmail] = useState(null);
     const [password,setPassword] = useState(null);
-    const {logginStatus,setLogginStats,signedUser} = useContext(AppContext);
-    const Navigate = useNavigate();
+    const {error,success,loading,submitHandler} = useForm();
 
     const login = async ()=>{
         const success = await submitHandler("post",`${server}/api/v1/login`,{username,email,password});
@@ -26,11 +27,11 @@ export default function Login(){
         if(signedUser){
             window.location.replace("/dashboard");
         }else{
-            setLogginStats(false)
+            setLoginStatus(false)
         }
     },[])
 
-    if(logginStatus){
+    if(loginStatus){
         return "loading..."
     }
 

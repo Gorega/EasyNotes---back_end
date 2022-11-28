@@ -31,8 +31,8 @@ app.get('*', (req, res) => {
 app.listen(process.env.PORT || 8000,async ()=>{
     try{
         await Connect();
-        return console.log("connected successfuly")
+        // connected to DB successfully handler
     }catch(err){
-        console.log("not connected !")
+        // connection failed handler
     }
 })

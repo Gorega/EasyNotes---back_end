@@ -1,41 +1,50 @@
 import styles from "../styles/Note.module.css";
-import { faCheck, faEdit,faTimes } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios"
-import {server} from "../config";
+import {server} from "../lib/config";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../AppContext";
+import { faCheck, faEdit,faTimes } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AlertModal from "./AlertModal";
 
-export default function Note({noteId,noteContent,noteDate,noteColor,existNote,addNote,closeNote}){
-    const {setUpdateNoteStatus,setNNote} = useContext(AppContext)
-    const [editStatus,setEditStatus] = useState(false);
+export default function Note(props){
+
+    const {noteId,noteContent,noteDate,noteColor,existNote} = props;
+    const {setUpdateNoteStatus,nNote,setNNote} = useContext(AppContext)
     const [showAlertModal,setShowAlertModal] = useState(false);
-    const [noteText,setNoteText] = useState(noteContent);
+    const [editStatus,setEditStatus] = useState(false);
+    const [noteText,setNoteText] = useState("");
+
+    const createNote = ()=>{
+        setUpdateNoteStatus(false)
+        axios.post(`${server}/api/v1/notes`,{color:nNote.data.color,content:noteText},{withCredentials:true})
+        .then(_ => {
+            setUpdateNoteStatus(true)
+            setNNote({status:false})
+        })
+    }
 
     const patchNote = ()=>{
         setUpdateNoteStatus(false)
         axios.patch(`${server}/api/v1/notes/update/${noteId}`,{content:noteText},{withCredentials:true})
-        .then(res => {
+        .then(_ => {
             setEditStatus(false)
             setUpdateNoteStatus(true);
             setNoteText(noteContent);
         })
-        .catch(err => console.log(err));
     }
 
     const deleteNote = ()=>{
-        if(closeNote){
-            setNNote(false);
+        if(nNote.status){
+            setNNote({status:false});
         }else{
             setUpdateNoteStatus(false)
             axios.delete(`${server}/api/v1/notes/delete/${noteId}`,{withCredentials:true})
-            .then(res => {
+            .then(_ => {
                 setShowAlertModal(false);
                 setUpdateNoteStatus(true);
                 setEditStatus(false);
             })
-            .catch(err => console.log(err));
         }
     }
 
@@ -52,11 +61,20 @@ export default function Note({noteId,noteContent,noteDate,noteColor,existNote,ad
 
     return <div className={styles.note} style={{backgroundColor:noteColor}} noteid={noteId}>
         <div className={styles.text}>
-        {editStatus ? <textarea autoFocus className={styles.inputText} type="text" value={noteText} onChange={(e)=> setNoteText(e.target.value)} />
+        {(editStatus || nNote.status) ?
+        <textarea
+            className={styles.inputText}
+            autoFocus
+            type="text"
+            value={noteText}
+            onChange={(e)=> setNoteText(e.target.value)} />
         : 
-        <p>{noteContent}</p>
+        <textarea
+            value={noteContent}
+            spellCheck="false" />
         }
         </div>
+
         <div className={styles.footer}>
             <h4>{noteDate && noteDate.substring(0,10)}</h4>
             {existNote ? <div className={styles.control} onClick={()=>{
@@ -66,19 +84,19 @@ export default function Note({noteId,noteContent,noteDate,noteColor,existNote,ad
                     setEditStatus(true)
                 }
             }}>
-                {editStatus ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faEdit} />}
+            {editStatus ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faEdit} />}
             </div>
-             :
-            <div className={styles.control} onClick={addNote}><FontAwesomeIcon icon={faCheck} /></div>}
+            :
+            <div className={styles.control} onClick={createNote}><FontAwesomeIcon icon={faCheck} /></div>}
         </div>
-        {(editStatus || closeNote) && <div className={styles.close} onClick={()=>setShowAlertModal(true)}>
+        {(editStatus || nNote.status) && <div className={styles.close} onClick={()=>setShowAlertModal(true)}>
             <FontAwesomeIcon icon={faTimes} />
         </div>}
         {showAlertModal
          &&
         <AlertModal
-                onOk={deleteNote}
-                onCancel={()=>setShowAlertModal(false)}
+            onOk={deleteNote}
+            onCancel={()=>setShowAlertModal(false)}
         />}
     </div>
 

@@ -1,36 +1,42 @@
 import styles from "../styles/Header.module.css";
+import { server } from "../lib/config";
+import axios from "axios";
+import { useContext, useState,useRef } from "react";
+import {AppContext} from "../AppContext";
+import {Link, useNavigate} from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faSortDown,faGear,faArrowRightFromBracket,faAngleRight, faTimes } from '@fortawesome/free-solid-svg-icons'
-import { useContext, useState,useRef } from "react";
-import {Link, useNavigate} from "react-router-dom"
-import {AppContext} from "../AppContext";
-import { server } from "../config";
-import axios from "axios";
 
 export default function Header({showHomeLink}){
-    const {user,setSearchValue,searchValue,showSearch,setShowSearch} = useContext(AppContext)
-    const [showUserMenu,setShowUserMenu] = useState(false);
+
     const searchInputRef = useRef(null);
     const Navigate = useNavigate();
+    const {user,setSearchValue,searchValue,showSearch,setShowSearch} = useContext(AppContext)
+    const [showUserMenu,setShowUserMenu] = useState(false);
 
     const logout = ()=>{
         axios.get(`${server}/api/v1/logout`,{withCredentials:true})
-        .then(res => {
-            window.localStorage.clear();
-            window.location.reload();
+        .then(_ => {
+            window.location.replace("/");
         })
-        .catch(err => console.log(err));
     }
 
     return <div className={styles.header}>
-        {showHomeLink ? <div className={styles.home}><Link to="/">EasyNotes</Link></div> : <div className={`${styles.search} ${showSearch && styles.active}`}>
-            {showSearch ? <FontAwesomeIcon icon={faTimes} onClick={()=> {
+        {showHomeLink ?
+        <div className={styles.home}><Link to="/">EasyNotes</Link></div>
+        :
+        <div className={`${styles.search} ${showSearch && styles.active}`}>
+            {showSearch ?
+            <FontAwesomeIcon icon={faTimes} onClick={()=> {
                 setShowSearch(false)
                 setSearchValue("")
                 searchInputRef.current.focus();
-            }} /> : <FontAwesomeIcon icon={faSearch} onClick={()=> setShowSearch(true)} />}
+            }}/>
+            :
+            <FontAwesomeIcon icon={faSearch} onClick={()=> setShowSearch(true)} />}
             <input type="text" ref={searchInputRef} autoComplete="false" name="text" placeholder="Search by note content or date ..." value={searchValue} onChange={(e)=> setSearchValue(e.target.value)} />
         </div>}
+
         <div className={`${styles.userProfile} ${showSearch && styles.hide}`} onMouseOver={()=> setShowUserMenu(true)}>
             <img src={`${server}/avaters/${user.image}`} />
             <FontAwesomeIcon icon={faSortDown} />

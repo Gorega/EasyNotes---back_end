@@ -1,17 +1,18 @@
 import React,{useEffect, useState} from "react";
 import axios from "axios";
-import {server} from "./config";
+import {server} from "./lib/config";
 import Cookies from 'js-cookie';
 
 export const AppContext = React.createContext({});
 
 const AppProvider = (props)=>{
+
+    const [user,setUser] = useState({});
+    const [loginStatus,setLoginStatus] = useState(true);
     const [nNote,setNNote] = useState({status:false,data:{}})
     const [updateNoteStatus,setUpdateNoteStatus] = useState(false);
-    const [logginStatus,setLogginStats] = useState(true);
     const [searchValue,setSearchValue] = useState("");
     const [showSearch,setShowSearch] = useState(false);
-    const [user,setUser] = useState({});
     const signedUser = Cookies.get("signed");
 
     const fetchUserData = ()=>{
@@ -19,7 +20,6 @@ const AppProvider = (props)=>{
         .then(res => {
             setUser({userId:res.data.userId,username:res.data.username,email:res.data.email,image:res.data.image})
         })
-        .catch(err => console.log(err)); 
     }
 
     useEffect(()=>{
@@ -33,7 +33,7 @@ const AppProvider = (props)=>{
         setNNote,
         updateNoteStatus,setUpdateNoteStatus,
         fetchUserData,user,setUser,
-        logginStatus,setLogginStats,
+        loginStatus,setLoginStatus,
         searchValue,setSearchValue,
         showSearch,setShowSearch,
         signedUser

@@ -42,7 +42,7 @@ async function register(req,res){
         <p>Verify your email address</p>
         <hr/>
         <p> Kindly use the link below in order to activate your account: </p>
-        <a href="https://easynotes-gorega.herokuapp.com/activate-account/${randomLink}">Link</a>
+        <a href="https://easynotes-gorega-preview.onrender.com/activate-account/${randomLink}">Link</a>
         `
         let emailSubject = "EasyNotes - activate your account"
             mail(email,emailMessage,emailSubject);

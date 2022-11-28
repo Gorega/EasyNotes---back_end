@@ -150,7 +150,7 @@ async function sendResetPassMail(req,res){
         <p>Reset your account password</p>
         <hr/>
         <p> Kindly use the link below in order to reset your account password: </p>
-        <a href="https://easynotes-gorega.herokuapp.com/reset-pass-redirect/${randomLink}">Link</a>
+        <a href="https://easynotes-gorega-preview.onrender.com/reset-pass-redirect/${randomLink}">Link</a>
         `
         let emailSubject = "EasyNotes - reset your account password"
         tries+=1;

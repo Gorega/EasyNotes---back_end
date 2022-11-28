@@ -1,12 +1,13 @@
 import styles from "../styles/preLogin/form.module.css";
-import Layout from "../components/preLogin/Layout";
-import { server } from "../config";
+import { server } from "../lib/config";
 import { useState } from "react";
-import useForm from "../components/lib/useForm";
+import useForm from "../lib/useForm";
+import Layout from "../components/preLogin/Layout";
 
 export default function ResetPass(){
-    const {error,success,setSuccess,loading,submitHandler} = useForm();
+
     const [email,setEmail] = useState(null);
+    const {error,success,setSuccess,loading,submitHandler} = useForm();
 
     const sendResetMailHandler = async (e)=>{
         e.preventDefault();

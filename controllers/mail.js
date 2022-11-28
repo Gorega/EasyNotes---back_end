@@ -37,10 +37,10 @@ const mail = (to,mailMessage,mainSubject) =>{
 
       transporter.sendMail(mailOptions, function(error, info){
         if (error) {
-          console.log(error)
+          // Error handler
           return;
         } else {
-          console.log("success")
+          // Email sent successfuly handler
           return;
         }
       });

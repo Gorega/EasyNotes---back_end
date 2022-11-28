@@ -6,8 +6,10 @@ import { faSpinner,faTriangleExclamation } from '@fortawesome/free-solid-svg-ico
 
 
 export default function Layout(props){
-    const [activeFrom,setActiveForm] = useState(null);
+
     const location = useLocation();
+    const [activeFrom,setActiveForm] = useState(null);
+    
     useEffect(()=>{
         if(location.pathname.includes("login")){
             setActiveForm(0)

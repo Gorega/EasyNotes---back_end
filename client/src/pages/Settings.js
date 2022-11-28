@@ -1,16 +1,16 @@
 import styles from "../styles/pages/Settings.module.css";
-import Header from "../components/Header";
-import SettingsModal from "../components/SettingsModal";
+import { server } from "../lib/config";
+import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../AppContext";
-import { server } from "../config";
-import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTriangleExclamation,faSpinner } from "@fortawesome/free-solid-svg-icons";
-import useForm from "../components/lib/useForm";
+import useForm from "../lib/useForm";
+import Header from "../components/Header";
+import SettingsModal from "../components/SettingsModal";
 
 export default function Settings(){
-    const {error,loading,setError,submitHandler} = useForm();
+
     const {user,fetchUserData} = useContext(AppContext);
     const [passowrdModal,setPasswordModal] = useState(false);
     const [emailModal,setEmailModal] = useState(false);
@@ -24,8 +24,9 @@ export default function Settings(){
     const [avatarPreview,setAvatarPreview] = useState(null);
     const [avatarImage,setAvatarImage] = useState(null);
     const [avatarStatus,setAvatarStatus] = useState(null);
+    const {error,loading,setError,submitHandler} = useForm();
 
-    const pathUsername = async (e)=>{
+    const patchUsername = async (e)=>{
         e.preventDefault();
         const success = await submitHandler("patch",`${server}/api/v1/user/username-reset`,{newUsername:newUsername ? newUsername : user.username})
         if(success){
@@ -95,7 +96,6 @@ export default function Settings(){
         if(success){
             setAvatarStatus("fulfilled")
             setAvatarPreview(null);
-            console.log("deleted");
         }else{
             setAvatarStatus("rejected")
         }
@@ -117,7 +117,7 @@ return <>
         <h2>Account Settings</h2>
         <p>Edit your username,avater,etc.</p>
         <div className={styles.holder}>
-            <form onSubmit={pathUsername}>
+            <form onSubmit={patchUsername}>
                 <div className={styles.formControl}>
                     <label>Username</label>
                     <input type="text" defaultValue={user.username} onChange={(e)=>setNewUsername(e.target.value)} />

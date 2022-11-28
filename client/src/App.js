@@ -1,6 +1,6 @@
 import AppProvider from "./AppContext";
 import {BrowserRouter,Routes,Route,Navigate} from "react-router-dom"
-import ProtectedRoutes from "./ProtectedRoutes";
+import ProtectedRoutes from "./lib/ProtectedRoutes";
 import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
 import Login from "./pages/Login";
@@ -14,14 +14,13 @@ function App() {
     <AppProvider>
       <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route element={<ProtectedRoutes />}>
             <Route path={"/dashboard"} element={<Dashboard />} />
             <Route path={"/settings"} element={<Settings />} />
         </Route>
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
         <Route path="/activate-account/:token" element={<ActivateAccount />} />
         <Route path="/reset-pass" element={<ResetPass />} />
         <Route path="/reset-pass-redirect/:token" element={<ResetPassRedirect />} />
