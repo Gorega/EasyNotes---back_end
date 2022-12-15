@@ -19,7 +19,6 @@
 
 @media(max-width:768px){
     .main{
-        margin-top:100px;
         width: 100%;
     }
     .main::-webkit-scrollbar{

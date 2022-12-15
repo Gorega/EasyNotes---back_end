@@ -25,7 +25,9 @@
 }
 
 .nav .create{
+    position: relative;
     margin-top:50px;
+    z-index: 2;
 }
 
 .nav .create .plus{
@@ -103,16 +105,31 @@
     }
 
     .nav .create{
-        align-items: center;
-        display: flex;
-        left: 0;
+        right:25px;
+        position: fixed;
+        bottom:20px;
+    }
+
+    .nav .create .plus{
+        width: 55px;
+        height:55px;
+        font-size: 20px;
+    }
+
+    .nav .create .colors{
         position: absolute;
-        top: 50px;
+        top:0;
+        right:65px;
+        background-color: #232E4D;
+        border-radius: 15px;
+        padding-right:17px;
     }
 
     .nav .create .colors ul{
         width: max-content;
         margin-left:10px;
+        position: relative;
+        padding-top:17px;
     }
 
     .nav .create .colors ul li{
