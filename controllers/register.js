@@ -1,8 +1,8 @@
+const mongoose = require("mongoose");
 const User = require("../models/user");
 const Token = require("../models/token");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const mongoose = require("mongoose");
 const mail = require("../controllers/mail");
 
 async function register(req,res){
